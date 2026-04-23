@@ -16,7 +16,7 @@
 - name: Replace local host to another server
   ansible.builtin.replace:
     path: /etc/mongod.conf
-    regexp: '27.0.0.1'
+    regexp: '127.0.0.1'
     replace: '0.0.0.0'
 
 - name: start and enable service
