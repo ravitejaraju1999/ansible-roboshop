@@ -6,11 +6,11 @@
     ansible.builtin.command: dnf module disable redis -y
 
   - name: enable redis 7
-    ansible.builtin.command: dnf module enable redis:7 -y
+    ansible.builtin.command: dnf module enable redis:6 -y
 
   - name: install redis
     ansible.builtin.package:
-      name: redis
+      name: redis6
       state: present
   
   - name: allow remote connections
@@ -21,12 +21,12 @@
 
   - name: disable proctected mode
     ansible.builtin.lineinfile:
-      path: /etc/redis/redis.conf
+      path: /etc/redis6/redis6.conf
       regexp: 'protected-mode'
       line: 'protected-mode no'
 
   - name: start and enable redis
     ansible.builtin.service:
-      name: redis
+      name: redis6
       enabled: yes
       state: started
