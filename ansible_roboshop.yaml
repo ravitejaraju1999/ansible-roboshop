@@ -8,7 +8,7 @@
     domain_name: "raviteja.store"
     # key_name= r53
     instances:
-    - mongo
+    - mongodb
   tasks:
   - name: create ec2 instances
     amazon.aws.ec2_instance:
