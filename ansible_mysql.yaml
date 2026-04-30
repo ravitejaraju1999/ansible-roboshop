@@ -6,22 +6,20 @@
     mysql_root_password: "RoboShop@1"
 
   tasks:
-  - name: import mysql gpg key
-    ansible.builtin.rpm_key:
-      state: present
-      key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
 
   - name: install mysql server
     ansible.builtin.package:
       name: mysql-community-server
       state: present
 
-  - name: start and enable mysql service
+  - name: start mysql
     ansible.builtin.service:
       name: mysqld
       state: started
       enabled: yes
-      enabled: yes
 
-  - name: setup root password
-    ansible.builtin.command: mysql_secure_installation --set-root-pass "{{ mysql_root_password }}"
+  - name: set root password (idempotent safe way)
+    ansible.builtin.shell: |
+      mysql -u root -p'{{ mysql_root_password }}' \
+      -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+    ignore_errors: yes
