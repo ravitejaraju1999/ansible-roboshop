@@ -28,7 +28,24 @@
       name: PyMySQL
       state: present
 
-  - name: set root password using socket authentication
+  - name: get temporary mysql root password
+    ansible.builtin.shell: "grep 'temporary password' /var/log/mysqld.log | tail -n 1 | awk '{print $NF}'"
+    register: temp_mysql_root_password
+    changed_when: false
+    failed_when: false
+
+  - name: reset mysql root password using temporary password
+    community.mysql.mysql_user:
+      name: root
+      host: localhost
+      password: "{{ mysql_root_password }}"
+      login_user: root
+      login_password: "{{ temp_mysql_root_password.stdout }}"
+      login_unix_socket: /var/lib/mysql/mysql.sock
+      check_implicit_admin: yes
+      state: present
+
+  - name: set root password safely
     community.mysql.mysql_user:
       name: root
       host: localhost
