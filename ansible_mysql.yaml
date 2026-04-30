@@ -12,14 +12,22 @@
       name: mysql-community-server
       state: present
 
-  - name: start mysql
+  - name: start and enable mysql service
     ansible.builtin.service:
       name: mysqld
       state: started
       enabled: yes
 
-  - name: set root password (idempotent safe way)
-    ansible.builtin.shell: |
-      mysql -u root -p'{{ mysql_root_password }}' \
-      -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
-    ignore_errors: yes
+  - name: install python mysql dependency
+    ansible.builtin.package:
+      name: python3-PyMySQL
+      state: present
+
+  - name: set root password using socket authentication
+    community.mysql.mysql_user:
+      name: root
+      host: localhost
+      password: "{{ mysql_root_password }}"
+      login_unix_socket: /var/lib/mysql/mysql.sock
+      check_implicit_admin: yes
+      state: present
