@@ -1,0 +1,15 @@
+- name: setup catalogue service
+  hosts: catalogue
+  become: yes
+  tasks:
+  - name: disable default nodejs
+    ansible.builtin.command: apt module disable nodejs -y
+
+  - name: enable nodejs 20
+    ansible.builtin.command: apt module enable nodejs:20 -yes
+
+  - name: install nodejs
+    ansible.builtin.package:
+      name: nodejs
+      state: present
+
