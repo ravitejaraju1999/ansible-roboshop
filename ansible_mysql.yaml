@@ -18,9 +18,9 @@
       state: started
       enabled: yes
 
-  - name: install python mysql dependency
-    ansible.builtin.package:
-      name: python3-PyMySQL
+  - name: install python mysql dependency via pip
+    ansible.builtin.pip:
+      name: PyMySQL
       state: present
 
   - name: set root password using socket authentication
