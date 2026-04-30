@@ -1,25 +1,22 @@
 - name: setup mysql server
   hosts: mysql
   become: yes
+
   vars:
     mysql_root_password: "RoboShop@1"
 
   tasks:
-
-  - name: install mysql community repo
-    ansible.builtin.package:
-      name: mysql80-community-release
-      state: present
 
   - name: install mysql server
     ansible.builtin.package:
       name: mysql-community-server
       state: present
 
-  - name: start and enable mysql
+  - name: start and enable mysql service
     ansible.builtin.service:
       name: mysqld
       state: started
+      enabled: yes
       enabled: yes
 
   - name: setup root password
