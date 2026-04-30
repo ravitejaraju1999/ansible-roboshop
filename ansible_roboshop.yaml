@@ -2,8 +2,8 @@
   hosts: local
   connection: local
   vars:
-    ami_id: ami-0a339c7d1c981b2cb
-    sg_id: sg-0eceac836e52f5116
+    ami_id: ami-05cf1e9f73fbad2e2
+    sg_id: sg-032d07bf13a9c2cc2
     zone_id: "Z09554163BEIVGQB3DW1S"
     domain_name: "raviteja.store"
     # key_name= r53
@@ -13,7 +13,7 @@
   - name: create ec2 instances
     amazon.aws.ec2_instance:
       name: "{{ item }}"
-      instance_type: t3.micro
+      instance_type: t2.small
       security_group: "{{ sg_id }}"
       image_id: "{{ ami_id }}"
       tags:
