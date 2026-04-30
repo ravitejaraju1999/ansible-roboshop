@@ -1,55 +1,18 @@
-- name: setup mysql server
+- name: Setup MySQL server
   hosts: mysql
   become: yes
 
-  vars:
-    mysql_root_password: "RoboShop@1"
-
   tasks:
+    - name: Install MySQL server
+      ansible.builtin.package:
+        name: mysql-server
+        state: present
 
-  - name: install mysql server
-    ansible.builtin.package:
-      name: mysql-community-server
-      state: present
+    - name: Start and enable MySQL service
+      ansible.builtin.service:
+        name: mysqld
+        state: started
+        enabled: yes
 
-  - name: start and enable mysql service
-    ansible.builtin.service:
-      name: mysqld
-      state: started
-      enabled: yes
-
-  - name: install python3-pip
-    ansible.builtin.package:
-      name: python3-pip
-      state: present
-
-  - name: install python mysql dependency via pip
-    ansible.builtin.pip:
-      name: PyMySQL
-      state: present
-
-  - name: get temporary mysql root password
-    ansible.builtin.shell: "grep 'temporary password' /var/log/mysqld.log | tail -n 1 | awk '{print $NF}'"
-    register: temp_mysql_root_password
-    changed_when: false
-    failed_when: false
-
-  - name: reset mysql root password using temporary password
-    community.mysql.mysql_user:
-      name: root
-      host: localhost
-      password: "{{ mysql_root_password }}"
-      login_user: root
-      login_password: "{{ temp_mysql_root_password.stdout }}"
-      login_unix_socket: /var/lib/mysql/mysql.sock
-      check_implicit_admin: yes
-      state: present
-
-  - name: set root password safely
-    community.mysql.mysql_user:
-      name: root
-      host: localhost
-      password: "{{ mysql_root_password }}"
-      login_unix_socket: /var/lib/mysql/mysql.sock
-      check_implicit_admin: yes
-      state: present
+    - name: Set MySQL root password
+      ansible.builtin.command: mysql_secure_installation --set-root-pass RoboShop@1
