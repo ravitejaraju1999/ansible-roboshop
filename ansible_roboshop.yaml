@@ -2,12 +2,15 @@
   hosts: local
   connection: local
   vars:
-    ami_id: ami-05cf1e9f73fbad2e2
-    sg_id: sg-032d07bf13a9c2cc2
+    ami_id: ami-03ee1c934c6ed9fd8
+    sg_id: sg-0eceac836e52f5116
     zone_id: "Z09554163BEIVGQB3DW1S"
     domain_name: "raviteja.store"
     # key_name= r53
     instances:
+    - mongodb
+    - redis
+    - mysql
     - catalogue
   tasks:
   - name: create ec2 instances
