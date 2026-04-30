@@ -6,14 +6,9 @@
 
   tasks:
 
-  - name: install MySQL community repo rpm (download first)
-    ansible.builtin.get_url:
-      url: https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
-      dest: /tmp/mysql-release.rpm
-
-  - name: install MySQL repo package
+  - name: install mysql community repo
     ansible.builtin.package:
-      name: /tmp/mysql-release.rpm
+      name: mysql80-community-release
       state: present
 
   - name: install mysql server
