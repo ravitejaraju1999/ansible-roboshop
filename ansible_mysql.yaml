@@ -1,7 +1,6 @@
 - name: Setup MySQL server
   hosts: mysql
   become: yes
-
   tasks:
     - name: Install MySQL server
       ansible.builtin.package:
@@ -15,4 +14,10 @@
         enabled: yes
 
     - name: Set MySQL root password
-      ansible.builtin.command: mysql_secure_installation --set-root-pass RoboShop@1
+      community.mysql.mysql_user:
+        name: root
+        password: RoboShop@1
+        host: localhost
+        state: present
+        login_user: root
+        login_password: "{{ mysql_temp_password }}"
