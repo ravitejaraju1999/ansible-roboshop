@@ -1,0 +1,6 @@
+- name: setup dispatch service
+  hosts: dispatch
+  become: yes
+  tasks:
+  - name: install golang
+  
