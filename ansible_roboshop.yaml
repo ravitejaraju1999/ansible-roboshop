@@ -8,7 +8,9 @@
     domain_name: "raviteja.store"
     # key_name= r53
     instances:
-    - shipping
+    - rabbitmq
+    - frontend
+    - dispatch
   tasks:
   - name: create ec2 instances
     amazon.aws.ec2_instance:
