@@ -81,7 +81,7 @@
       name: catalogue
       enabled: true
       state: started
-      deamon_reload: true
+      daemon_reload: true
 
 
 
