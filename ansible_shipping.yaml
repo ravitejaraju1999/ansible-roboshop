@@ -2,22 +2,22 @@
   hosts: shipping
   become: yes
   tasks:
-  - name: install maven
+
+  - name: install maven and mysql client
     ansible.builtin.dnf:
       name: "{{ item }}"
       state: present
     loop:
-    - maven
-    - mysql
+      - maven
+      - mysql
 
   - name: install mysql python libraries
     ansible.builtin.pip:
       executable: pip3.9
       name: "{{ item }}"
     loop:
-    - cryptography
-    - PyMySQL
-
+      - cryptography
+      - PyMySQL
 
   - name: create roboshop system user
     ansible.builtin.user:
@@ -63,12 +63,17 @@
     args:
       chdir: /app
 
-
   - name: Copy shipping service file
     ansible.builtin.copy:
       src: shipping.service
       dest: /etc/systemd/system/shipping.service
 
+  - name: Wait for MySQL to be reachable
+    ansible.builtin.wait_for:
+      host: mysql.raviteja.store
+      port: 3306
+      timeout: 60
+      state: started
 
   - name: import shipping data into mysql
     community.mysql.mysql_db:
@@ -79,19 +84,13 @@
       login_password: RoboShop@1
       target: "{{ item }}"
     loop:
-    - /app/db/schema.sql
-    - /app/db/app-user.sql 
-    - /app/db/master-data.sql
+      - /app/db/schema.sql
+      - /app/db/app-user.sql 
+      - /app/db/master-data.sql
 
-
-  - name: reload service
+  - name: reload and start shipping service
     ansible.builtin.systemd_service:
       name: shipping
       enabled: true
       state: started
       daemon_reload: true
-
-
-
-  
-
